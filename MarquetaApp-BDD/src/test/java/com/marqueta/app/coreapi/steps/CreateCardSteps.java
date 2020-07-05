@@ -21,15 +21,11 @@ public class CreateCardSteps {
 	public String response;
 	
 	public void buildRequest() {
-		request = readerUtil.buildJson();
+		//request = readerUtil.buildJson();
 		System.out.println(request);
 	}
 	
 	public void callCardProducts() {
-		/*
-		 * CreateCardProductRequest request = new CreateCardProductRequest();
-		 * request.setName("My Card Product 01"); request.setStart_date("2017-04-27");
-		 */
 		try {
 			response = service.createCardProduct(request);
 		} catch(Exception e) {

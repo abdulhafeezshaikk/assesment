@@ -1,27 +1,33 @@
 package com.marqueta.app.coreapi.util;
 
-import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+
+import com.marqueta.app.coreapi.constants.CoreApiScenario;
 
 @Component
 public class JsonFileReaderUtility {
 	
-	public String buildJson() {
+	public static final String PATH = "src/test/resources/data-templates/";
+	public static final String FILE_EXTENSION = ".json";
+	
+	@Autowired
+	@Qualifier("CoreApiScenarioNamesMap")
+	private Map<CoreApiScenario, String> scenarioMap;
+	
+	public String buildJson(CoreApiScenario scenario) {
 		try {
 	        JSONParser parser = new JSONParser();
 	        JSONObject data = (JSONObject) parser.parse(
-	              new FileReader("src/test/resources/data-templates/CreateCardProductRequest.json"));
+	              new FileReader(PATH+scenarioMap.get(scenario)+FILE_EXTENSION));
 
 	        String json = data.toJSONString();
 	        return json;
@@ -31,12 +37,13 @@ public class JsonFileReaderUtility {
 	    }
 	}
 	
-	public String buildRequestFromJson() {
+	public JSONObject getObject(String request) {
 		try {
-			Resource resource = new ClassPathResource("data-templates/CreateCardProductRequest.json");
-			return new BufferedReader(new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8)).lines().collect(Collectors.joining("\n"));
-		} catch (IOException e) {
-			System.out.println(e);
+			JSONParser parser = new JSONParser();
+			JSONObject data = (JSONObject) parser.parse(request);
+			return data;
+		} catch (ParseException e) {
+			e.printStackTrace();
 			return null;
 		}
 	}

@@ -48,13 +48,12 @@ public class CoreApiService {
 				CreateProgramFundingResponse.class).getBody();
 	}
 	
-	public CreateUserResponse createUser(CreateUserRequest request) {
+	public CreateUserResponse createUser(String request) {
 		RestTemplate restTemplate = new RestTemplate();
 		String createUserUrl = coreApiUrl+"/users";
-		return restTemplate
-				.exchange(createUserUrl, HttpMethod.POST, 
-				new HttpEntity<CreateUserRequest>(request, headerBuilder.createHttpHeaders()), 
-				CreateUserResponse.class).getBody();
+		HttpEntity<String> entity = new HttpEntity<String>(request, headerBuilder.createHttpHeaders());
+		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor("9dc0f495-95f3-46a1-b1db-56caa14951ab","bcf02eeb-f2eb-4d8d-814d-a4d0b67df002"));
+		return restTemplate.postForObject(createUserUrl, entity, CreateUserResponse.class);
 	}
 	
 	public CreateCardResponse createCard(CreateCardRequest request) {

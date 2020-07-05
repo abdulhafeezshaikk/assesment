@@ -179,15 +179,6 @@
 						</executions>
 						<configuration>
 							<skipTests>${skipTests}</skipTests>
-							<systemPropertyVariables>
-								<phantomjs.binary>${phantomjs.binary}</phantomjs.binary>
-							</systemPropertyVariables>
-							<systemProperties>
-								<property>
-									<name>java.awt.headless</name>
-									<value>true</value>
-								</property>
-							</systemProperties>
 							<ignoreFailureInStories>true</ignoreFailureInStories>
 							<ignoreFailureInView>false</ignoreFailureInView>
 						</configuration>
