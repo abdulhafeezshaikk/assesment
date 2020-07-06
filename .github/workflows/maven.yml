@@ -22,3 +22,8 @@ jobs:
         java-version: 1.8
     - name: Build with Maven
       run: mvn -B clean verify -Ptest-integration --file MarquetaApp-BDD/pom.xml
+    - name: BDD results
+      uses: actions/upload-artifact@v1
+      with:
+        name: BDD-report
+        path: target/site/serenity/capabilities.html
