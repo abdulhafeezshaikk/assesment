@@ -38,3 +38,26 @@ And a newChildAccount is added to parentuserr_token account
 When create user core api operation is invoked
 Then the newChildAccount account is created for parentuserr_token account
 
+Scenario: 04 Create a child user account for an existing parent user
+Meta:
+@addgrandchild2nonbusinessacount
+Given newChildAccount is an existing child user
+And add a grandChildAccount to a non business newChildAccount account
+When create user core api operation is invoked
+Then error message Children of a User Cardholder may not have children is received
+And error code 400064 is received
+
+Scenario: 05 Error validations for email,token
+Meta:
+@errors
+
+Given I am an individual user
+And user tries to create an account with existing <Field>
+When create user core api operation is invoked
+Then user receives <ErrorCode> and <ErrorMessage>
+
+Examples:
+| 	Field			|	  ErrorCode			|		ErrorMessage								|
+|	email			|		400057			|	A card holder with the same email already exist |
+|	token			|		409002			|	General conflict exception: Token has already been associated with a different payload |
+

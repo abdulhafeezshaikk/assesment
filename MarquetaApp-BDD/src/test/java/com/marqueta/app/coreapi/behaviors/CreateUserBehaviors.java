@@ -25,6 +25,11 @@ public class CreateUserBehaviors extends ScenarioSteps {
 		createUserSteps.buildValidUserRequest(CoreApiScenario.INDIVIDUAL_USER);
 	}
 	
+	@Given("user tries to create an account with existing <Field>")
+	public void setupIndividualUserWithExistingEmailRequest(@Named("Field")String field) {
+		createUserSteps.buildRequestWithExistingField(field);
+	}
+	
 	@Given("I am a new parent user")
 	public void setupParentUserRequest() {
 		createUserSteps.buildValidUserRequest(CoreApiScenario.PARENT_USER);
@@ -40,9 +45,19 @@ public class CreateUserBehaviors extends ScenarioSteps {
 		createUserSteps.buildValidUserRequest(CoreApiScenario.PARENT_USER);
 	}
 	
-	@Given("a $newChildAccount is added to $parentToken account")
-	public void addChildToexistingUser(String userToken, String parentToken) {
+	@Given("$newChildAccount is an existing child user")
+	public void existingChildUser(String childToken) {
+		createUserSteps.buildValidUserRequest(CoreApiScenario.PARENT_USER);
+	}
+	
+	@Given("a $userToken is added to $parentToken account")
+	public void addChildToExistingUser(String userToken, String parentToken) {
 		createUserSteps.buildChildToExistingParentRequest(userToken, parentToken);
+	}
+	
+	@Given("add a $grandChildToken to a non business $childToken account")
+	public void addGrandChildToExistingNonBusinessUser(String grandChildToken, String childToken) {
+		createUserSteps.buildGrandChildToExistingNonBusinessRequest(grandChildToken, childToken);
 	}
 	
 	@When("create user core api operation is invoked")
@@ -78,5 +93,20 @@ public class CreateUserBehaviors extends ScenarioSteps {
 	@Then("the $newChildAccount account is created for $parentuserr_token account")
 	public void verifyChildOfExistingParentAccount(String userToken, String parentToken) {
 		createUserSteps.verifyChildToExistingUserResponse(userToken, parentToken);
+	}
+	
+	@Then("error message $errorMessage is received")
+	public void getChildrenCardholderErrorMessage(String errorMessage) {
+		createUserSteps.verifyChildrenCardHolderErrorMessage(errorMessage);
+	}
+	
+	@Then("error code $errorCode is received")
+	public void receiveErrorCode(String errorCode) {
+		createUserSteps.verifyChildrenCardHolderErrorCode(errorCode);
+	}
+	
+	@Then("user receives <ErrorCode> and <ErrorMessage>")
+	public void receiveErrorCodeAndMessage(@Named("ErrorCode") String code, @Named("ErrorMessage") String message) {
+		createUserSteps.verifyErrorCodeAndMessage(message, code);
 	}
 }

@@ -2,10 +2,12 @@ package com.marqueta.app.coreapi.steps;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 
 import com.marqueta.app.coreapi.constants.CoreApiScenario;
 import com.marqueta.app.coreapi.model.CreateUserResponse;
@@ -24,9 +26,33 @@ public class CreateUserSteps {
 	public String request;
 	public CreateUserResponse response;
 	public String parentToken;
+	public HttpClientErrorException exception;
+	
+	public void defaults() {
+		exception = null;
+		request = null;
+		response = null;
+	}
 	
 	public void buildValidUserRequest(CoreApiScenario scenario) {
 		request = readerUtil.buildJson(scenario);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void buildRequestWithExistingField(String field) {
+		JSONObject requestObject = readerUtil.getObject(request);
+		if(field.equalsIgnoreCase("email")) {
+			requestObject.put(field, "blueebird@gmail.com");
+		}else {
+			requestObject.put("email", "newemail@gmail.com");
+		}
+		if(field.equalsIgnoreCase("token")) {
+			requestObject.put(field, "blueebird_token");
+		}else {
+			requestObject.put("token", "token1");
+		}
+		
+		request = requestObject.toJSONString();
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -48,6 +74,15 @@ public class CreateUserSteps {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public void buildGrandChildToExistingNonBusinessRequest(String grandChildToken, String childToken) {
+		JSONObject requestObject = readerUtil.getObject(request);
+		requestObject.put("token", grandChildToken);
+		requestObject.put("email", grandChildToken+"@gmail.com");
+		requestObject.put("parent_token", childToken);
+		request = requestObject.toJSONString();
+	}
+	
+	@SuppressWarnings("unchecked")
 	public void setNoChildrenFlag() {
 		JSONObject requestObject = readerUtil.getObject(request);
 		requestObject.put("uses_parent_account", false);
@@ -64,8 +99,8 @@ public class CreateUserSteps {
 	public void callCreateUser() {
 		try {
 			response = service.createUser(request);
-		} catch(Exception e) {
-			System.out.println(e);
+		} catch(HttpClientErrorException e) {
+			exception = e;
 		}
 	}
 	
@@ -91,5 +126,21 @@ public class CreateUserSteps {
 		assertNotNull(response);
 		assertEquals(response.getToken(), readerUtil.getObject(request).get("token").toString());
 		assertEquals(response.getParent_token(), parentToken);
+	}
+	
+	public void verifyChildrenCardHolderErrorMessage(String errorMessage) {
+		assertNotNull(exception);
+		assertTrue(exception.getResponseBodyAsString().contains(errorMessage));
+	}
+	
+	public void verifyChildrenCardHolderErrorCode(String errorCode) {
+		assertTrue(exception.getResponseBodyAsString().contains(errorCode));
+	}
+	
+	public void verifyErrorCodeAndMessage(String errorMessage, String errorCode) {
+		assertNotNull(exception);
+		System.out.println(exception.getResponseBodyAsString());
+		assertTrue(exception.getResponseBodyAsString().contains(errorMessage));
+		assertTrue(exception.getResponseBodyAsString().contains(errorCode));
 	}
 }
