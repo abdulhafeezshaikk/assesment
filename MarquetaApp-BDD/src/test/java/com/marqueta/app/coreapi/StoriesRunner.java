@@ -23,12 +23,12 @@ public class StoriesRunner extends SerenityStories {
 		return "**/*.story";
 	}
 	
-	@Override
-	public InjectableStepsFactory stepsFactory() {
-		return new SpringStepsFactory(configuration(), createContext());
-	}
 	
-	private ApplicationContext createContext() {
-		return new SpringApplicationContextFactory("applicationContext-serenity.xml").createApplicationContext();
-	}
+	  @Override public InjectableStepsFactory stepsFactory() { return new
+	  SpringStepsFactory(configuration(), createContext()); }
+	  
+	  private ApplicationContext createContext() { return new
+	  SpringApplicationContextFactory("applicationContext-serenity.xml").
+	  createApplicationContext(); }
+	 
 }

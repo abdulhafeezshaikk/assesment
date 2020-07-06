@@ -5,6 +5,8 @@ So that parent-child relationship between two users or business and user are est
 
 Scenario: 01 Create an individual user account with no child users
 Meta:
+@acceptance
+@createuser
 @individualuser
 
 Given I am an individual user
@@ -14,6 +16,8 @@ Then I get a successful response
 
 Scenario: 02 Create a new parent user account with 2 child users
 Meta:
+@acceptance
+@createuser
 @newparentuser2users
 
 Given I am a new parent user
@@ -31,6 +35,8 @@ Examples:
 
 Scenario: 03 Create a child user account for an existing parent user
 Meta:
+@acceptance
+@createuser
 @addchild2existingparent
 
 Given parentuserr_token is an existing user/account
@@ -40,6 +46,8 @@ Then the newChildAccount account is created for parentuserr_token account
 
 Scenario: 04 Create a child user account for an existing parent user
 Meta:
+@acceptance
+@createuser
 @addgrandchild2nonbusinessacount
 Given newChildAccount is an existing child user
 And add a grandChildAccount to a non business newChildAccount account
@@ -49,6 +57,8 @@ And error code 400064 is received
 
 Scenario: 05 Error validations for email,token
 Meta:
+@acceptance
+@createuser
 @errors
 
 Given I am an individual user

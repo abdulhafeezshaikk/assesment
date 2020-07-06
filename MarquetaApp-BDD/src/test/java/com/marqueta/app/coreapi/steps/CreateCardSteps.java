@@ -4,7 +4,6 @@ import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.marqueta.app.coreapi.builder.CoreApiRequestBuilder;
 import com.marqueta.app.coreapi.service.CoreApiService;
 import com.marqueta.app.coreapi.util.JsonFileReaderUtility;
 
