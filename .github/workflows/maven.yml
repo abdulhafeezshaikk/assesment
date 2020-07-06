@@ -26,4 +26,4 @@ jobs:
       uses: actions/upload-artifact@v1
       with:
         name: Acceptance-EOT
-        path: MarquetaApp-BDD/target/site/serenity/capabilities.html
+        path: MarquetaApp-BDD/target/site/serenity
