@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import org.json.simple.JSONObject;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
@@ -38,7 +38,6 @@ public class CreateUserSteps {
 		request = readerUtil.buildJson(scenario);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void buildRequestWithExistingField(String field) {
 		JSONObject requestObject = readerUtil.getObject(request);
 		if(field.equalsIgnoreCase("email")) {
@@ -52,48 +51,43 @@ public class CreateUserSteps {
 			requestObject.put("token", "token1");
 		}
 		
-		request = requestObject.toJSONString();
+		request = requestObject.toString();
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void buildChildRequest(String userToken) {
 		JSONObject requestObject = readerUtil.getObject(request);
 		requestObject.put("token", userToken);
 		requestObject.put("email", userToken+"@gmail.com");
 		requestObject.put("parent_token", parentToken);
-		request = requestObject.toJSONString();
+		request = requestObject.toString();
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void buildChildToExistingParentRequest(String userToken, String parentToken) {
 		JSONObject requestObject = readerUtil.getObject(request);
 		requestObject.put("token", userToken);
 		requestObject.put("email", userToken+"@gmail.com");
 		requestObject.put("parent_token", parentToken);
-		request = requestObject.toJSONString();
+		request = requestObject.toString();
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void buildGrandChildToExistingNonBusinessRequest(String grandChildToken, String childToken) {
 		JSONObject requestObject = readerUtil.getObject(request);
 		requestObject.put("token", grandChildToken);
 		requestObject.put("email", grandChildToken+"@gmail.com");
 		requestObject.put("parent_token", childToken);
-		request = requestObject.toJSONString();
+		request = requestObject.toString();
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void setNoChildrenFlag() {
 		JSONObject requestObject = readerUtil.getObject(request);
 		requestObject.put("uses_parent_account", false);
-		request = requestObject.toJSONString();
+		request = requestObject.toString();
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void setShareBalancesFlag(Boolean flag) {
 		JSONObject requestObject = readerUtil.getObject(request);
 		requestObject.put("uses_parent_account", flag);
-		request = requestObject.toJSONString();
+		request = requestObject.toString();
 	}
 	
 	public void callCreateUser() {

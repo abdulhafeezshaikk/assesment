@@ -3,10 +3,8 @@ package com.marqueta.app.coreapi.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.client.support.BasicAuthorizationInterceptor;
+import org.springframework.http.client.support.BasicAuthenticationInterceptor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -15,7 +13,6 @@ import com.marqueta.app.coreapi.model.CreateCardRequest;
 import com.marqueta.app.coreapi.model.CreateCardResponse;
 import com.marqueta.app.coreapi.model.CreateProgramFundingRequest;
 import com.marqueta.app.coreapi.model.CreateProgramFundingResponse;
-import com.marqueta.app.coreapi.model.CreateUserRequest;
 import com.marqueta.app.coreapi.model.CreateUserResponse;
 import com.marqueta.app.coreapi.model.FundUserAccountRequest;
 import com.marqueta.app.coreapi.model.FundUserAccountResponse;
@@ -35,7 +32,7 @@ public class CoreApiService {
 		RestTemplate restTemplate = new RestTemplate();
 		String createCardProductUrl = coreApiUrl+"/cardproducts";
 		HttpEntity<String> entity = new HttpEntity<String>(request, headerBuilder.createHttpHeaders());
-		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor("9dc0f495-95f3-46a1-b1db-56caa14951ab","bcf02eeb-f2eb-4d8d-814d-a4d0b67df002"));
+		restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor("9dc0f495-95f3-46a1-b1db-56caa14951ab","bcf02eeb-f2eb-4d8d-814d-a4d0b67df002"));
 		return restTemplate.postForObject(createCardProductUrl, entity, String.class);
 	}
 	
@@ -52,7 +49,7 @@ public class CoreApiService {
 		RestTemplate restTemplate = new RestTemplate();
 		String createUserUrl = coreApiUrl+"/users";
 		HttpEntity<String> entity = new HttpEntity<String>(request, headerBuilder.createHttpHeaders());
-		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor("9dc0f495-95f3-46a1-b1db-56caa14951ab","bcf02eeb-f2eb-4d8d-814d-a4d0b67df002"));
+		restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor("9dc0f495-95f3-46a1-b1db-56caa14951ab","bcf02eeb-f2eb-4d8d-814d-a4d0b67df002"));
 		return restTemplate.postForObject(createUserUrl, entity, CreateUserResponse.class);
 	}
 	

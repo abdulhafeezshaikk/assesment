@@ -1,0 +1,63 @@
+{
+  "name": "Card Product",
+  "token": "cardproduct",
+  "start_date": "2017-04-27",
+  "config": {
+    "poi" : {
+      "ecommerce" : false,
+      "atm" : false
+    },
+    "transaction_controls" : {
+      "accepted_countries_token": "accept_us_only",
+		"address_verification" : {
+			"auth_messages" : {
+				"validate": true,
+				"decline_on_postal_code_mismatch": false
+			}
+	  }
+    },
+    "fulfillment": {
+      "shipping": {
+        "return_address": {
+          "address1": "123 Henry St",
+          "address2": "Suite 101",
+          "city": "Porterville",
+          "state": "CA",
+          "postal_code": "93257",
+          "country": "USA",
+          "phone": "8315555555",
+          "first_name": "Saki",
+          "middle_name": "R",
+          "last_name": "Dogger"
+        },
+        "recipient_address": {
+          "address1": "1000 Pacific Ave",
+          "city": "Santa Lucia",
+          "state": "WA",
+          "postal_code": "00112",
+          "country": "USA",
+          "phone": "3451239876",
+          "first_name": "Big",
+          "last_name": "Bird"
+        },
+        "method": "USPS_REGULAR"
+      },
+      "fulfillment_provider": "PERFECTPLASTIC",
+	  "allow_card_creation": true
+    },
+    "card_life_cycle" : {
+      "activate_upon_issue" : true,
+      "expiration_offset": {
+        "unit": "YEARS",
+        "value": 10
+      },
+      "card_service_code" : 101,
+      "update_expiration_upon_activation": false
+    },
+    "jit_funding": {
+      "paymentcard_funding_source": {
+        "enabled": true
+      }
+    }
+  }
+}

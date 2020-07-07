@@ -1,22 +1,22 @@
 package com.marqueta.app.coreapi.security;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
-@Configuration
+@Component
 public class UserCredential {
 	
-	@Value("${app.username}")
+	@Value("#{APP_USERNAME}")
 	private String userID;
 	
-	@Value("${app.password}")
+	@Value("#{APP_PASSWORD}")
 	private String password;
 	
 	public String getUserID() {
-		return "9dc0f495-95f3-46a1-b1db-56caa14951ab";
+		return userID;
 	}
 	
 	public String getPassword() {
-		return "{ENCRYPT_AES}SGsNX+5vQ5MbHyze9ToXK5KP2Q4NU/hXgKqPGHbOr+CXOvTUi/NqAY5iDuGto0Z3";
+		return password;
 	}
 }

@@ -17,7 +17,4 @@ public class CreateCardProductRequest {
 	public void setStart_date(String start_date) {
 		this.start_date = start_date;
 	}
-	
-	
-
 }

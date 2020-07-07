@@ -16,6 +16,8 @@ public class ScenarioNameMapConfig {
 		Map<CoreApiScenario, String> map = new HashMap<CoreApiScenario, String>();
 		map.put(CoreApiScenario.INDIVIDUAL_USER, "IndividualUserRequest");
 		map.put(CoreApiScenario.PARENT_USER, "ParentUserRequest");
+		map.put(CoreApiScenario.DEFAULT_CARD_PRODUCT, "BasicCardProduct");
+		
 		return map;
 	}
 }
