@@ -1,0 +1,35 @@
+{
+   "token":"cardtoken",
+   "user_token":"testtoken",
+   "fulfillment":{
+      "shipping":{
+         "recipient_address":{
+            "address1":"1000 Pacific Ave",
+            "city":"Santa Lucia",
+            "state":"WA",
+            "postal_code":"00112",
+            "country":"USA",
+            "phone":"3451239876",
+            "first_name":"Big",
+            "last_name":"Bird"
+         }
+      },
+      "card_personalization":{
+         "text":{
+            "name_line_1":{
+               "value":"mynamehere"
+            }
+         },
+         "images":{
+            "card":{
+               "name":"my_card_logo.png"
+            },
+            "signature":{
+               "name":"my_signature.png"
+            }
+         }
+      }
+   },
+   "card_product_token":"testtoken",
+   "expedite":false
+}

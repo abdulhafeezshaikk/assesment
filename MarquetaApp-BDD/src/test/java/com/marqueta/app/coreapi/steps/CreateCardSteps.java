@@ -4,11 +4,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Iterator;
-
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 
 import com.marqueta.app.coreapi.constants.CoreApiScenario;
 import com.marqueta.app.coreapi.service.CoreApiService;
@@ -25,91 +24,129 @@ public class CreateCardSteps {
 	
 	public String request;
 	public String response;
+	public HttpClientErrorException exception;
 	
 	public void buildRequest(CoreApiScenario scenario) {
 		request = readerUtil.buildJson(scenario);
 	}
 	
-	public void buildNoAddressRequest() {
+	public void setNewAddress(String address, String city) {
+		JSONObject requestObject = readerUtil.getObject(request);
+		requestObject.getJSONObject("fulfillment").getJSONObject("shipping").getJSONObject("recipient_address").put("address1", address);
+		requestObject.getJSONObject("fulfillment").getJSONObject("shipping").getJSONObject("recipient_address").put("city", city);
+		request = requestObject.toString();
+	}
+	
+	public void addPersonalizedDetails(String name, String image, String signature) {
+		JSONObject requestObject = readerUtil.getObject(request);
+		requestObject.put("token", "personalizedcard");
+		requestObject.put("card_product_token", "noaddress");
+		requestObject.put("user_token", "blueebird_token");
+		requestObject.getJSONObject("fulfillment").getJSONObject("card_personalization").getJSONObject("text").getJSONObject("name_line_1").put("value", name);
+		requestObject.getJSONObject("fulfillment").getJSONObject("card_personalization").getJSONObject("images").getJSONObject("card").put("name", image);
+		requestObject.getJSONObject("fulfillment").getJSONObject("card_personalization").getJSONObject("images").getJSONObject("signature").put("name", signature);
+		request = requestObject.toString();;
+	}
+	
+	public void setUserToken(String userToken) {
 		JSONObject requestObject = new JSONObject();
-		requestObject.put("name", "No Address Card");
-		requestObject.put("token", "noaddress");
-		requestObject.put("start_date", "2020-04-27");
+		requestObject.put("user_token", userToken);
 		request = requestObject.toString();
 	}
 	
-	public void setCardType(String cardType) {
+	public void setAtmCardProductToken(String cardProductToken) {
 		JSONObject requestObject = readerUtil.getObject(request);
-		requestObject.put("token", cardType+"token");
-		requestObject.getJSONObject("config").getJSONObject("poi").put(cardType, true);
+		requestObject.put("card_product_token", cardProductToken);
+		requestObject.put("token", "atmenabledcard");
 		request = requestObject.toString();
 	}
 	
-	public void setProvider(String provider) {
+	public void setVirtualCardProductToken(String cardProductToken) {
 		JSONObject requestObject = readerUtil.getObject(request);
-		requestObject.getJSONObject("config").getJSONObject("fulfillment").put("fulfillment_provider", provider);
+		requestObject.put("card_product_token", cardProductToken);
+		requestObject.put("token", "virtualparentchildcard");
 		request = requestObject.toString();
 	}
 	
-	public void setCardName(String cardName) {
+	public void setDigitalCardProductToken(String cardProductToken) {
 		JSONObject requestObject = readerUtil.getObject(request);
-		requestObject.put("token", cardName);
+		requestObject.put("card_product_token", cardProductToken);
+		requestObject.put("token", "digitalwalletenabledcard");
 		request = requestObject.toString();
 	}
 	
-	public void disableCreateCard() {
+	public void setCantCreateCardProductToken(String cardProductToken) {
 		JSONObject requestObject = readerUtil.getObject(request);
-		requestObject.put("token", "cardcreationdisabled");
-		requestObject.getJSONObject("config").getJSONObject("fulfillment").put("allow_card_creation", false);
+		requestObject.put("card_product_token", cardProductToken);
 		request = requestObject.toString();
 	}
 	
-	public void setAuthMessages() {
+	public void setAtmEnabledCardProduct() {
 		JSONObject requestObject = readerUtil.getObject(request);
-		requestObject.put("token", "addressVerificationAuthMessageToken");
-		requestObject.getJSONObject("config").getJSONObject("transaction_controls").getJSONObject("address_verification").getJSONObject("auth_messages").put("validate", true);
-		requestObject.getJSONObject("config").getJSONObject("transaction_controls").getJSONObject("address_verification").getJSONObject("auth_messages").put("decline_on_postal_code_mismatch", true);
 		request = requestObject.toString();
 	}
 	
-	public void callCardProducts() {
+	public void setupExpediteshipping() {
+		JSONObject requestObject = readerUtil.getObject(request);
+		requestObject.put("expedite", true);
+		request = requestObject.toString();
+	}
+	
+	public void setUsOnlyIndividualUser(String userToken) {
+		JSONObject requestObject = readerUtil.getObject(request);
+		requestObject.put("user_token", userToken);
+		request = requestObject.toString();
+	}
+	
+	public void callCreateCard() {
 		try {
-			response = service.createCardProduct(request);
-		} catch(Exception e) {
-			System.out.println(e);
+			response = service.createCard(request);
+		} catch(HttpClientErrorException e) {
+			exception = e;
 		}
 	}
 	
-	public void verifyCardTypeResponse(String cardType) {
-		assertEquals(readerUtil.getObject(response).get("token").toString(), cardType+"token");
-		assertEquals(readerUtil.getObject(response).getJSONObject("config").getJSONObject("poi").get(cardType), true);
+	public void verifyAtmResponse() {
+		assertNotNull(response);
+		assertEquals(readerUtil.getObject(response).get("token").toString(), "atmenabledcard");
 	}
 	
-	public void verifyAuthMessages() {
+	public void verifyDigitalEnabledResponse() {
 		assertNotNull(response);
-		assertEquals(readerUtil.getObject(response).getJSONObject("config").getJSONObject("transaction_controls").getJSONObject("address_verification").getJSONObject("auth_messages").get("decline_on_postal_code_mismatch"), true);
+		assertEquals(readerUtil.getObject(response).get("token").toString(), "digitalwalletenabledcard");
 	}
 	
-	public void verifyCardCreationIsDisabled() {
+	public void verifyVirtualCardResponse() {
 		assertNotNull(response);
-		assertEquals(readerUtil.getObject(response).getJSONObject("config").getJSONObject("fulfillment").get("allow_card_creation"), false);
+		assertEquals(readerUtil.getObject(response).get("token").toString(), "virtualparentchildcard");
 	}
 	
-	public void verifyNameAndProvider(String cardName, String provider) {
-		assertNotNull(response);
-		assertEquals(readerUtil.getObject(response).get("token").toString(), cardName);
-		assertEquals(readerUtil.getObject(response).getJSONObject("config").getJSONObject("fulfillment").get("fulfillment_provider").toString(), provider);
+	public void verifyExpeditedShipping() {
+		assertEquals(readerUtil.getObject(response).get("expedite"), true);
 	}
 	
-	public void verifyNoAddress() {
+	public void verifyPersonalizedCardCreated() {
 		assertNotNull(response);
-		JSONObject fulfillment = readerUtil.getObject(response).getJSONObject("config").getJSONObject("fulfillment");
-		Iterator<String> keys = fulfillment.keys();
-		while(keys.hasNext()) {
-		    String key = keys.next();
-		    if (key.equalsIgnoreCase("shipping")) {
-		          assertTrue(false);    
-		    }
-		}
+		assertEquals(readerUtil.getObject(response).get("token").toString(), "personalizedcard");
+	}
+	
+	public void verifyAddressDetails(String address, String city) {
+		assertEquals(readerUtil.getObject(response).getJSONObject("fulfillment").getJSONObject("shipping").getJSONObject("recipient_address").get("address1").toString(), address);
+		assertEquals(readerUtil.getObject(response).getJSONObject("fulfillment").getJSONObject("shipping").getJSONObject("recipient_address").get("city").toString(), city);
+	}
+	
+	public void verifyPersonalizedDetails(String name, String image, String signature) {
+		assertEquals(readerUtil.getObject(response).getJSONObject("fulfillment").getJSONObject("card_personalization").getJSONObject("text").getJSONObject("name_line_1").get("value"), name);
+		assertEquals(readerUtil.getObject(response).getJSONObject("fulfillment").getJSONObject("card_personalization").getJSONObject("images").getJSONObject("card").get("name"), image);
+		assertEquals(readerUtil.getObject(response).getJSONObject("fulfillment").getJSONObject("card_personalization").getJSONObject("images").getJSONObject("signature").get("name"), signature);
+	}
+	
+	public void verifyUnableTOCreateCardErrorMessage(String errorMessage) {
+		assertNotNull(exception);
+		assertTrue(exception.getResponseBodyAsString().contains(errorMessage));
+	}
+	
+	public void verifyUnableTOCreateCardErrorErrorCode(String errorCode) {
+		assertTrue(exception.getResponseBodyAsString().contains(errorCode));
 	}
 }

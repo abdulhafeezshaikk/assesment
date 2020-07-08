@@ -1,67 +1,64 @@
 Narrative: 
 As a User, 
-I want to create a card products
-So that behavior of associated cards can be determined whether they can be used at an ATM and/or online and whether they are currently enabled
+I want to create a card 
+So that I can conduct transactions at merchants
 
-Scenario: 01 create a atm/ecommerce card product
-Meta:
+Scenario: 01 create a perfect plastic physical atm enabled card for a individual user in usa
+Meta: 
 @acceptance
-@createcardproduct
-@atmecommerce
+@createcard
 
-Given I want to create <CardType> card
-When create card product is invoked
-Then I get a successful <CardType> response
+Given I am a us only individual user
+And I want a perfect plastic physical atm enabled card
+When create card operation is invoked
+Then my atm enabled custom card is created
+
+Scenario: 02 create a digital wallet enabled card for a individual and expedite the shipping
+Meta: 
+@acceptance
+@createcard
+
+Given I am a us only individual user
+And I want a digital wallet enabled card
+And I want a to expedite shipping
+When create card operation is invoked
+Then my digital wallet enabled card is created
+And shipping is expedited
+
+Scenario: 03 create a virtual only card with postal code address validation for a parent-child user account 
+Meta: 
+@acceptance
+@createcard
+
+Given I am a parent-child user account
+And I want virtual card with address validation on postal code
+When create card operation is invoked
+Then virtual card is created
+
+Scenario: 04 create a personalized card with user's name, image and signature and update the users address
+Meta: 
+@acceptance
+@createcard
+
+Given I am a individual customer
+And I want to update my <Address><City>
+And I want to add my <Name><Image> and <Signature>
+When create card operation is invoked
+Then my personalized card is created
+And address is update to <Address><City>
+And <Name><Image> and <Signature> are added to the card
 Examples:
-| CardType	|
-| 	atm		|
-| ecommerce	|
+|		Address		|		City		|		Name		|		Image		|		Signature		|
+| 	1 test avenue	|	testCity		|	My Test Name	|	my_image.png	|	my_signature.png	|
 
-Scenario: 02 create a card product that sends auth messages for address verification for postal code mismatch 
-Meta:
+
+Scenario: 05 create a card with card product that doesnt allow create card
+Meta: 
 @acceptance
-@createcardproduct
-@authmessages
+@createcard
 
-Given user creates a card product
-And enables auth messages for address verification on postal code
-When create card product is invoked
-Then address verification messages are enabled for the card
-
-Scenario: 03 create perfect plastic/Idemia and arrow eye cards with
-Meta:
-@acceptance
-@createcardproduct
-@allproviders
-
-Given user creates <CardName>
-And wants fulfilment provider as <Provider>
-When create card product is invoked
-Then a <CardName> product is created with <Provider>
-Examples:
-|		CardName		|   	Provider		|
-| perfectplasticcard	|   PERFECTPLASTIC		|
-|	  idemiacard		|   	IDEMIA			|
-|	arroweyecard		|   	ARROWEYE		|
-
-Scenario: 04 create a card product that doesnt allow card creation 
-Meta:
-@acceptance
-@createcardproduct
-@createcarddisable
-
-Given user creates a card product
-And the product doesnt allow card creation
-When create card product is invoked
-Then card creation is disabled for the product
-
-Scenario: 05 create a card product with no shipping/return address
-Meta:
-@acceptance
-@createcardproduct
-@noaddress
-
-Given user creates a card product with no address
-When create card product is invoked
-Then card is created with no address
-
+Given I am a individual user
+And card product doesnt allow create card
+When create card operation is invoked
+Then error message Unable to create card when allow_card_creation is set to false is thrown
+And error code is 400659

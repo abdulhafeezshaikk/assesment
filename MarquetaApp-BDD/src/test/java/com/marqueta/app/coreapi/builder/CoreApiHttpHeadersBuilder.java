@@ -22,7 +22,6 @@ public class CoreApiHttpHeadersBuilder {
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		//headers.setAccept(acceptableMediaTypes);
 		//headers.set("Authorization", securityManager.generateBasicAuthToken());
 		return headers;
 	}
