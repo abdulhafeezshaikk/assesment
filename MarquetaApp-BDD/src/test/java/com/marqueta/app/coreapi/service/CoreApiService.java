@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import com.marqueta.app.coreapi.builder.CoreApiHttpHeadersBuilder;
+import com.marqueta.app.coreapi.model.CreateUserRequest;
 import com.marqueta.app.coreapi.model.CreateUserResponse;
 import com.marqueta.app.coreapi.model.TransactionRequest;
 
@@ -28,9 +29,9 @@ public class CoreApiService {
 		return restTemplate.postForObject(createCardProductUrl, entity, String.class);
 	}
 	
-	public CreateUserResponse createUser(String request) {
+	public CreateUserResponse createUser(CreateUserRequest request) {
 		String createUserUrl = coreApiUrl+"/users";
-		HttpEntity<String> entity = new HttpEntity<String>(request, headerBuilder.createHttpHeaders());
+		HttpEntity<CreateUserRequest> entity = new HttpEntity<>(request, headerBuilder.createHttpHeaders());
 		return restTemplate.postForObject(createUserUrl, entity, CreateUserResponse.class);
 	}
 	

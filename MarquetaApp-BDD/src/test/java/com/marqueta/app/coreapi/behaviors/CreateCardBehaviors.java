@@ -53,6 +53,7 @@ public class CreateCardBehaviors extends ScenarioSteps{
 	}
 	
 	@Given("I want a perfect plastic physical atm enabled card")
+	//@Then("I want a perfect plastic physical atm enabled card")
 	public void setupAtmEnabledCard() {
 		createCardSteps.setAtmCardProductToken("atmtoken");
 	}

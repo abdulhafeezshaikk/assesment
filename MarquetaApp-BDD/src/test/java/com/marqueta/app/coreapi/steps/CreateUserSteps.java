@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 
 import com.marqueta.app.coreapi.constants.CoreApiScenario;
+import com.marqueta.app.coreapi.model.CreateUserRequest;
 import com.marqueta.app.coreapi.model.CreateUserResponse;
 import com.marqueta.app.coreapi.service.CoreApiService;
 import com.marqueta.app.coreapi.util.JsonFileReaderUtility;
@@ -28,6 +29,8 @@ public class CreateUserSteps {
 	public String parentToken;
 	public HttpClientErrorException exception;
 	
+	public CreateUserRequest createUserRequest;
+	
 	public void defaults() {
 		exception = null;
 		request = null;
@@ -36,6 +39,12 @@ public class CreateUserSteps {
 	
 	public void buildValidUserRequest(CoreApiScenario scenario) {
 		request = readerUtil.buildJson(scenario);
+	}
+	
+	public void buildValidUserRequestPojo(String firstName) {
+		createUserRequest = new CreateUserRequest();
+		createUserRequest.setFirst_name(firstName);
+		createUserRequest.setLast_name("LastName");
 	}
 	
 	public void buildRequestWithExistingField(String field) {
@@ -92,7 +101,8 @@ public class CreateUserSteps {
 	
 	public void callCreateUser() {
 		try {
-			response = service.createUser(request);
+			System.out.println(createUserRequest.getAddress1());
+			response = service.createUser(createUserRequest);
 		} catch(HttpClientErrorException e) {
 			exception = e;
 		}
@@ -100,7 +110,8 @@ public class CreateUserSteps {
 	
 	public void verifyCreateUserResponse() {
 		assertNotNull(response);
-		assertEquals(response.getToken(), readerUtil.getObject(request).get("token").toString());
+		//assertEquals(response.getToken(), readerUtil.getObject(request).get("token").toString());
+		assertNotNull(response.getToken());
 		assertEquals(response.getUses_parent_account(), false);
 	}
 	
