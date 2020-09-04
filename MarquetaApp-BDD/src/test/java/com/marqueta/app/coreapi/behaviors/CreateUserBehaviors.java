@@ -22,13 +22,7 @@ public class CreateUserBehaviors extends ScenarioSteps {
 
 	@Given("I am an individual user")
 	public void setupIndividualUserRequest() {
-		//createUserSteps.buildValidUserRequest();
-	}
-	
-	@Given("I am $firstName")
-	@Then("I am $firstName")
-	public void setupIndividualUserRequestPojo(String firstName) {
-		createUserSteps.buildValidUserRequestPojo(firstName);
+		createUserSteps.buildValidUserRequest(CoreApiScenario.INDIVIDUAL_USER);
 	}
 	
 	@Given("user tries to create an account with existing <Field>")

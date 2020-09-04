@@ -1,6 +1,7 @@
 package com.marqueta.app.coreapi;
 
 import org.jbehave.core.configuration.Configuration;
+import org.jbehave.core.embedder.Embedder;
 import org.jbehave.core.failures.FailingUponPendingStep;
 import org.jbehave.core.steps.InjectableStepsFactory;
 import org.jbehave.core.steps.spring.SpringApplicationContextFactory;
